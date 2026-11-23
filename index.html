@@ -6,6 +6,7 @@
 <meta name="theme-color" content="#0E0E10">
 <link rel="icon" href="assets/logo-color.png">
 <link rel="canonical" href="https://rawandaldeebstudio.com/">
+<script>window.RW_detectLang=function(){var h=location.hash;if(h==='#en')return'en';if(h==='#ar')return'ar';try{var s=localStorage.getItem('rw-lang-pick');if(s==='en'||s==='ar')return s}catch(e){}var L=(navigator.languages&&navigator.languages.length?navigator.languages:[navigator.language||navigator.userLanguage||'ar']);return /^ar\b/i.test(String(L[0]||''))?'ar':'en'};(function(){var l=window.RW_detectLang(),r=document.documentElement;r.lang=l;r.dir=l==='ar'?'rtl':'ltr'})();</script>
 </head><body>
 <title>Rawand Eldeeb</title>
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -1283,13 +1284,10 @@ dialog.lb::backdrop{background:rgba(10,4,15,.9);backdrop-filter:blur(4px)}
     root.lang=l; root.dir=l==='ar'?'rtl':'ltr';
     btn.textContent=l==='ar'?'EN':'ع';
     document.querySelectorAll('a.wa-link').forEach(function(a){a.href='https://wa.me/972598281212?text='+encodeURIComponent(WA_TEXT[l])});
-    try{localStorage.setItem('rw-lang',l)}catch(e){}
   }
-  var start='ar';
-  if(location.hash==='#en') start='en';
-  else { try{var s=localStorage.getItem('rw-lang'); if(s==='en'||s==='ar') start=s}catch(e){} }
+  var start=window.RW_detectLang();
   setLang(start);
-  btn.addEventListener('click',function(){setLang(root.lang==='ar'?'en':'ar'); var t=document.getElementById('tTrack'); if(t){t.scrollLeft=0; t.dispatchEvent(new Event('scroll'));}});
+  btn.addEventListener('click',function(){setLang(root.lang==='ar'?'en':'ar'); try{localStorage.setItem('rw-lang-pick',root.lang)}catch(e){} var t=document.getElementById('tTrack'); if(t){t.scrollLeft=0; t.dispatchEvent(new Event('scroll'));}});
   function setMode(m){root.setAttribute('data-mode',m);try{localStorage.setItem('rw-mode',m)}catch(e){}}
   var m0='dark'; try{var sm=localStorage.getItem('rw-mode'); if(sm==='light'||sm==='dark') m0=sm}catch(e){}
   setMode(m0);
