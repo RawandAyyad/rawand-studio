@@ -105,3 +105,11 @@ create policy "admin updates work" on storage.objects
 drop policy if exists "admin deletes work" on storage.objects;
 create policy "admin deletes work" on storage.objects
   for delete to authenticated using (bucket_id = 'work' and public.is_admin());
+
+-- ---------- Table privileges (new projects don't grant these automatically; RLS above still decides who sees what) ----------
+grant usage on schema public to anon, authenticated;
+grant insert on public.requests, public.events to anon, authenticated;
+grant select on public.reviews, public.projects to anon, authenticated;
+grant select, insert, update, delete on public.requests, public.events, public.reviews, public.projects to authenticated;
+grant usage, select on all sequences in schema public to anon, authenticated;
+grant execute on function public.is_admin() to anon, authenticated;
