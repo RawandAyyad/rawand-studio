@@ -989,6 +989,7 @@ dialog.lb::backdrop{background:rgba(10,4,15,.9);backdrop-filter:blur(4px)}
         </fieldset>
         <div class="fld"><label for="fName"><span data-l="ar">الاسم</span><span data-l="en">Your name</span></label><input type="text" id="fName" autocomplete="name"></div>
         <div class="fld"><label for="fMsg"><span data-l="ar">أخبرني عن مشروعك</span><span data-l="en">Tell me about your project</span></label><textarea id="fMsg" rows="4"></textarea></div>
+        <div class="fld"><label for="fContact"><span data-l="ar">رقم واتساب أو إيميل (اختياري)</span><span data-l="en">WhatsApp number or email (optional)</span></label><input type="text" id="fContact" autocomplete="tel" dir="auto"></div>
         <p class="err" id="fErr" hidden><span data-l="ar">اختر الخدمة التي تحتاجها أولاً.</span><span data-l="en">Please choose a service first.</span></p>
         <button class="btn btn-primary" type="submit" id="fSubmit"><span data-l="ar">إرسال الطلب</span><span data-l="en">Send request</span></button>
         <div class="ok" id="fOk" hidden>
@@ -1299,7 +1300,7 @@ dialog.lb::backdrop{background:rgba(10,4,15,.9);backdrop-filter:blur(4px)}
   tabs.forEach(function(t){t.addEventListener('click',function(){
     var f=t.dataset.f;
     tabs.forEach(function(x){x.setAttribute('aria-pressed',x===t?'true':'false')});
-    cats.forEach(function(c){c.hidden=!(f==='all'||c.dataset.cat===f)});
+    document.querySelectorAll('.cat').forEach(function(c){c.hidden=!(f==='all'||c.dataset.cat===f)});
   })});
 
   // lightbox
@@ -1311,6 +1312,7 @@ dialog.lb::backdrop{background:rgba(10,4,15,.9);backdrop-filter:blur(4px)}
     if(lb.showModal){lb.showModal()}else{lb.setAttribute('open','')}
     lb.querySelector('.lb-scroll').scrollTop=0;
   }
+  window.RW_open=open;
   document.querySelectorAll('.shot').forEach(function(s){s.addEventListener('click',function(){open(s)})});
   var caseShots=[document.querySelector('[data-cat="logo"] .shot'),document.querySelector('.case-last .shot')];
   document.querySelectorAll('.open-case').forEach(function(b){b.addEventListener('click',function(){open(caseShots[+b.dataset.target])})});
@@ -1533,6 +1535,6 @@ dialog.lb::backdrop{background:rgba(10,4,15,.9);backdrop-filter:blur(4px)}
   document.getElementById('fEdit').addEventListener('click',function(){ok.hidden=true; sub.hidden=false; document.getElementById('fMsg').focus();});
 })();
 </script>
-
-
+<script src="assets/rw-config.js"></script>
+<script src="assets/rw-data.js"></script>
 </body></html>
