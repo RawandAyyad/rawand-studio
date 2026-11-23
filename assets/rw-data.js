@@ -44,6 +44,16 @@
   var ref = '';
   try { if (document.referrer) { var rh = new URL(document.referrer).hostname.replace(/^www\./, ''); if (rh && rh !== location.hostname.replace(/^www\./, '')) ref = rh; } } catch (e) {}
   if (!ref) { var m = location.search.match(/[?&]utm_source=([^&]+)/); if (m) ref = decodeURIComponent(m[1]); }
+  // Links opened inside Instagram / Facebook / TikTok... usually arrive with no referrer: read it from the in-app browser.
+  if (!ref) {
+    var ua = navigator.userAgent || '';
+    if (/Instagram/i.test(ua)) ref = 'instagram.com';
+    else if (/FBAN|FBAV|FB_IAB/i.test(ua)) ref = 'facebook.com';
+    else if (/musical_ly|BytedanceWebview|TikTok/i.test(ua)) ref = 'tiktok.com';
+    else if (/Snapchat/i.test(ua)) ref = 'snapchat.com';
+    else if (/LinkedInApp/i.test(ua)) ref = 'linkedin.com';
+    else if (/Pinterest/i.test(ua)) ref = 'pinterest.com';
+  }
 
   function track(type, label) {
     if (isAdmin) return;
