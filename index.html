@@ -1477,6 +1477,16 @@ dialog.lb::backdrop{background:rgba(10,4,15,.9);backdrop-filter:blur(4px)}
       if(!tw||!ww) return;
       var fs=parseFloat(getComputedStyle(word).fontSize)*tw/ww;
       word.style.fontSize=Math.min(fs,200).toFixed(2)+'px';
+      // signature "Rawand" reaches the "o" after the f
+      var sign=document.querySelector('.hp-sign'), o=word.querySelectorAll('.ch')[5];
+      if(sign&&o){
+        sign.style.fontSize='';
+        var sr=sign.getBoundingClientRect(), or=o.getBoundingClientRect(), sw=sign.offsetWidth;
+        var target=(or.left+or.width*.55)-sr.left;
+        if(sw&&target>0) sign.style.fontSize=(parseFloat(getComputedStyle(sign).fontSize)*target/sw).toFixed(2)+'px';
+        var h1=sign.parentNode.getBoundingClientRect(), wr=word.getBoundingClientRect();
+        sign.style.top=(wr.top-h1.top+wr.height*.22-sign.offsetHeight*.5).toFixed(1)+'px';
+      }
     }
     fit();
     if(document.fonts&&document.fonts.ready) document.fonts.ready.then(fit);
