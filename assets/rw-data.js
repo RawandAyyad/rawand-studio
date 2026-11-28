@@ -103,7 +103,7 @@
     var v = function (id) { var el = document.getElementById(id); return el ? el.value.trim() : ''; };
     var row = {
       service: cut(svc.dataset.ar || svc.value, 80),
-      budget: bud ? cut(bud.dataset.ar || bud.value, 80) : null,
+      budget: bud ? cut((bud.dataset.ar || bud.value) + (bud.value === 'set' && v('fBudget') ? ' — ' + v('fBudget') : ''), 80) : null,
       name: cut(v('fName'), 120) || null,
       contact: cut(v('fContact'), 120) || null,
       message: cut(v('fMsg'), 3000) || null,

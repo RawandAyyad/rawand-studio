@@ -376,6 +376,10 @@ html[lang="en"] .svc-cta .arr{display:inline-block;transform:scaleX(-1)}
 .req fieldset{border:0;padding:0;margin:0;min-width:0}
 .req legend,.req .fld label{display:block;font-weight:500;margin-bottom:12px;padding:0}
 .pills{display:flex;flex-wrap:wrap;gap:8px}
+.bud-amt{display:inline-flex;animation:budIn .35s cubic-bezier(.3,1.4,.5,1)}
+.req .bud-amt input[type="text"]{font:inherit;color:var(--fg);background:var(--ink);border:1px solid var(--orchid);border-radius:999px;padding:9px 16px;width:190px;max-width:100%;outline:none;transition:box-shadow .2s}
+.req .bud-amt input[type="text"]:focus{box-shadow:0 0 0 3px rgba(150,78,158,.28)}
+@keyframes budIn{from{opacity:0;transform:translateX(-8px) scale(.96)}to{opacity:1;transform:none}}
 .pill{position:relative}
 .pill input{position:absolute;opacity:0;width:1px;height:1px}
 .pill>span{display:inline-block;padding:8px 16px;border:1px solid var(--line-strong);border-radius:999px;font-size:var(--step--1);cursor:pointer;transition:all .15s}
@@ -1032,7 +1036,7 @@ dialog.lb::backdrop{background:rgba(10,4,15,.9);backdrop-filter:blur(4px)}
         </fieldset>
         <fieldset>
           <legend><span data-l="ar">الميزانية المتوقعة (اختياري)</span><span data-l="en">Expected budget (optional)</span></legend>
-          <div class="pills"><label class="pill"><input type="radio" name="budget" value="none" data-ar="لم أحدد الميزانية بعد" data-en="Not decided yet"><span><span data-l="ar">لم أحدد الميزانية بعد</span><span data-l="en">Not decided yet</span></span></label><label class="pill"><input type="radio" name="budget" value="quote" data-ar="أحتاج عرض سعر" data-en="I need a quote"><span><span data-l="ar">أحتاج عرض سعر</span><span data-l="en">I need a quote</span></span></label><label class="pill"><input type="radio" name="budget" value="set" data-ar="لدي ميزانية محددة" data-en="I have a set budget"><span><span data-l="ar">لدي ميزانية محددة</span><span data-l="en">I have a set budget</span></span></label></div>
+          <div class="pills"><label class="pill"><input type="radio" name="budget" value="none" data-ar="لم أحدد الميزانية بعد" data-en="Not decided yet"><span><span data-l="ar">لم أحدد الميزانية بعد</span><span data-l="en">Not decided yet</span></span></label><label class="pill"><input type="radio" name="budget" value="quote" data-ar="أحتاج عرض سعر" data-en="I need a quote"><span><span data-l="ar">أحتاج عرض سعر</span><span data-l="en">I need a quote</span></span></label><label class="pill"><input type="radio" name="budget" value="set" data-ar="لدي ميزانية محددة" data-en="I have a set budget"><span><span data-l="ar">لدي ميزانية محددة</span><span data-l="en">I have a set budget</span></span></label><span class="bud-amt" id="budAmt" hidden><input type="text" id="fBudget" inputmode="decimal" maxlength="40" dir="auto" autocomplete="off" placeholder="المبلغ، مثلاً 500 دولار" aria-label="المبلغ"></span></div>
         </fieldset>
         <div class="fld"><label for="fName"><span data-l="ar">الاسم</span><span data-l="en">Your name</span></label><input type="text" id="fName" autocomplete="name"></div>
         <div class="fld"><label for="fMsg"><span data-l="ar">أخبرني عن مشروعك</span><span data-l="en">Tell me about your project</span></label><textarea id="fMsg" rows="4"></textarea></div>
@@ -1606,6 +1610,14 @@ dialog.lb::backdrop{background:rgba(10,4,15,.9);backdrop-filter:blur(4px)}
 
   // request form -> WhatsApp message
   var ok=document.getElementById('fOk'), err=document.getElementById('fErr'), sub=document.getElementById('fSubmit');
+  // budget: amount field next to "I have a set budget"
+  var budAmt=document.getElementById('budAmt'), fBud=document.getElementById('fBudget');
+  function budAmount(){ var b=form.querySelector('input[name="budget"]:checked'); return b&&b.value==='set'? fBud.value.trim() : ''; }
+  form.querySelectorAll('input[name="budget"]').forEach(function(r){ r.addEventListener('change',function(){
+    var on=r.checked&&r.value==='set'; budAmt.hidden=!on;
+    fBud.placeholder=root.lang==='en'?'Amount, e.g. $500':'المبلغ، مثلاً 500 دولار'; fBud.setAttribute('aria-label',root.lang==='en'?'Amount':'المبلغ');
+    if(on) setTimeout(function(){fBud.focus()},60);
+  }); });
   form.addEventListener('submit',function(e){
     e.preventDefault();
     var l=root.lang, svc=form.querySelector('input[name="svc"]:checked'), bud=form.querySelector('input[name="budget"]:checked');
@@ -1613,8 +1625,8 @@ dialog.lb::backdrop{background:rgba(10,4,15,.9);backdrop-filter:blur(4px)}
     err.hidden=true;
     var nm=document.getElementById('fName').value.trim(), msg=document.getElementById('fMsg').value.trim();
     var lines = l==='ar'
-      ? ['مرحباً روند، أود طلب تصميم.','الخدمة: '+svc.dataset.ar].concat(bud?['الميزانية: '+bud.dataset.ar]:[]).concat(nm?['الاسم: '+nm]:[]).concat(msg?['عن المشروع: '+msg]:[])
-      : ['Hi Rawand, I would like to request a design.','Service: '+svc.dataset.en].concat(bud?['Budget: '+bud.dataset.en]:[]).concat(nm?['Name: '+nm]:[]).concat(msg?['About the project: '+msg]:[]);
+      ? ['مرحباً روند، أود طلب تصميم.','الخدمة: '+svc.dataset.ar].concat(bud?['الميزانية: '+bud.dataset.ar+(budAmount()?' — '+budAmount():'')]:[]).concat(nm?['الاسم: '+nm]:[]).concat(msg?['عن المشروع: '+msg]:[])
+      : ['Hi Rawand, I would like to request a design.','Service: '+svc.dataset.en].concat(bud?['Budget: '+bud.dataset.en+(budAmount()?' — '+budAmount():'')]:[]).concat(nm?['Name: '+nm]:[]).concat(msg?['About the project: '+msg]:[]);
     document.getElementById('fSend').href='https://wa.me/972598281212?text='+encodeURIComponent(lines.join('\n'));
     ok.hidden=false; sub.hidden=true;
     ok.scrollIntoView({block:'nearest',behavior:'smooth'});
