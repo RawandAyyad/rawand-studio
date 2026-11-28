@@ -659,10 +659,10 @@ html[data-mode="light"] .hp-word .ch:hover{color:#A24FAB}
   animation:hpIn .8s cubic-bezier(.2,.8,.25,1) .8s both,hpPulse 2.8s ease-in-out 1.8s infinite}
 .hp-word:hover .hp-dot{animation-play-state:running,paused;transform:translateY(-.02em) scale(1.25)}
 .hp-sign{position:absolute;left:.05em;top:.32em;z-index:2;pointer-events:none;font-family:"RW Script",cursive;font-weight:400;
-  font-size:clamp(2.6rem,1rem + 4.6vw,5.4rem);line-height:1;letter-spacing:.01em;color:#121014;opacity:1;
+  font-size:clamp(2.6rem,1rem + 4.6vw,5.4rem);line-height:1;letter-spacing:.01em;color:#C9B06D;opacity:1;
   transform:rotate(-6deg);transform-origin:left bottom;-webkit-text-stroke:.022em currentColor;
   clip-path:inset(-60% 100% -60% -20%);animation:hpSign 1.6s cubic-bezier(.6,.1,.2,1) .55s forwards}
-html[data-mode="light"] .hp-sign{color:#121014;opacity:1;text-shadow:0 0 .03em var(--ink),0 0 .03em var(--ink),0 0 .06em var(--ink)}
+
 .hp-tag{margin:.55em 0 0;direction:ltr;text-align:left;justify-self:start;font-weight:300;font-size:clamp(1rem,.78rem + .75vw,1.55rem);line-height:1.35;letter-spacing:.01em;color:#fff;opacity:0;animation:hpIn .9s cubic-bezier(.2,.8,.25,1) 1.2s forwards}
 html[data-mode="light"] .hp-tag{color:var(--fg)}
 @keyframes hpIn{from{opacity:0;translate:0 .35em}to{opacity:1;translate:0 0}}
@@ -1467,6 +1467,21 @@ dialog.lb::backdrop{background:rgba(10,4,15,.9);backdrop-filter:blur(4px)}
     });
   })();
 
+
+  // hero: make "Portfolio." exactly as wide as the tagline under it
+  (function(){
+    var word=document.querySelector('.hp-word'), tag=document.querySelector('.hp-tag'); if(!word||!tag) return;
+    function fit(){
+      word.style.fontSize='';
+      var tw=tag.getBoundingClientRect().width, ww=word.getBoundingClientRect().width;
+      if(!tw||!ww) return;
+      var fs=parseFloat(getComputedStyle(word).fontSize)*tw/ww;
+      word.style.fontSize=Math.min(fs,200).toFixed(2)+'px';
+    }
+    fit();
+    if(document.fonts&&document.fonts.ready) document.fonts.ready.then(fit);
+    var t; addEventListener('resize',function(){clearTimeout(t);t=setTimeout(fit,120)});
+  })();
   // hero 3D ring
   (function(){
     var stage=document.getElementById('ringStage'), ring=document.getElementById('ring'); if(!ring) return;
