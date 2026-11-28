@@ -1501,12 +1501,16 @@ dialog.lb::backdrop{background:rgba(10,4,15,.9);backdrop-filter:blur(4px)}
     if(matchMedia('(prefers-reduced-motion: reduce)').matches||!('IntersectionObserver' in window)) return;
     els.forEach(function(el){ el.textContent='0'+el.dataset.suf; });
     function run(el){
-      var to=+el.dataset.to, suf=el.dataset.suf, t0=null, dur=1800;
-      function step(t){ if(!t0) t0=t; var k=Math.min(1,(t-t0)/dur), e=1-Math.pow(1-k,3);
+      var to=+el.dataset.to, suf=el.dataset.suf, t0=null, dur=1800, id=(el._run=(el._run||0)+1);
+      function step(t){ if(id!==el._run) return; if(!t0) t0=t; var k=Math.min(1,(t-t0)/dur), e=1-Math.pow(1-k,3);
         el.textContent=Math.round(to*e)+suf; if(k<1) requestAnimationFrame(step); }
       requestAnimationFrame(step);
     }
-    var io=new IntersectionObserver(function(es){ es.forEach(function(x){ if(x.isIntersecting){ run(x.target); io.unobserve(x.target); } }); },{threshold:.6});
+    var io=new IntersectionObserver(function(es){ es.forEach(function(x){
+      var el=x.target;
+      if(x.isIntersecting){ if(!el._on){ el._on=1; run(el); } }
+      else if(x.intersectionRatio===0){ el._on=0; el._run=(el._run||0)+1; el.textContent='0'+el.dataset.suf; }
+    }); },{threshold:[0,.6]});
     els.forEach(function(el){ io.observe(el); });
   })();
   // hero 3D ring
