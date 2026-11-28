@@ -376,6 +376,14 @@ html[lang="en"] .svc-cta .arr{display:inline-block;transform:scaleX(-1)}
 .req fieldset{border:0;padding:0;margin:0;min-width:0}
 .req legend,.req .fld label{display:block;font-weight:500;margin-bottom:12px;padding:0}
 .pills{display:flex;flex-wrap:wrap;gap:8px}
+.sel-wrap{position:relative;max-width:420px}
+.req .sel-wrap select{appearance:none;-webkit-appearance:none;width:100%;font:inherit;color:var(--fg);background:var(--ink);border:1px solid var(--line-strong);border-radius:12px;padding:12px 16px;padding-inline-end:44px;cursor:pointer;transition:border-color .2s,box-shadow .2s}
+.req .sel-wrap select:hover{border-color:var(--orchid)}
+.req .sel-wrap select:focus{outline:none;border-color:var(--orchid);box-shadow:0 0 0 3px rgba(150,78,158,.28)}
+.req .sel-wrap select:invalid,.req .sel-wrap select.empty{color:var(--muted)}
+.req .sel-wrap select option{color:var(--fg);background:var(--plum)}
+.sel-wrap::after{content:"";position:absolute;inset-inline-end:16px;top:50%;width:9px;height:9px;margin-top:-7px;border-right:2px solid var(--lilac);border-bottom:2px solid var(--lilac);transform:rotate(45deg);pointer-events:none;transition:transform .2s}
+.sel-wrap:focus-within::after{transform:translateY(4px) rotate(225deg)}
 .bud-amt{display:inline-flex;animation:budIn .35s cubic-bezier(.3,1.4,.5,1)}
 .req .bud-amt input[type="text"]{font:inherit;color:var(--fg);background:var(--ink);border:1px solid var(--orchid);border-radius:999px;padding:9px 16px;width:190px;max-width:100%;outline:none;transition:box-shadow .2s}
 .req .bud-amt input[type="text"]:focus{box-shadow:0 0 0 3px rgba(150,78,158,.28)}
@@ -1032,7 +1040,7 @@ dialog.lb::backdrop{background:rgba(10,4,15,.9);backdrop-filter:blur(4px)}
       <form class="req" id="reqForm" novalidate>
         <fieldset>
           <legend><span data-l="ar">ما الخدمة التي تحتاجها؟</span><span data-l="en">What do you need?</span></legend>
-          <div class="pills"><label class="pill"><input type="radio" name="svc" value="identity" data-ar="هوية بصرية" data-en="Visual identity"><span><span data-l="ar">هوية بصرية</span><span data-l="en">Visual identity</span></span></label><label class="pill"><input type="radio" name="svc" value="social" data-ar="تصاميم سوشيال ميديا" data-en="Social media"><span><span data-l="ar">تصاميم سوشيال ميديا</span><span data-l="en">Social media</span></span></label><label class="pill"><input type="radio" name="svc" value="profile" data-ar="ملفات شركات وعروض تقديمية" data-en="Profiles &amp; decks"><span><span data-l="ar">ملفات شركات وعروض تقديمية</span><span data-l="en">Profiles &amp; decks</span></span></label><label class="pill"><input type="radio" name="svc" value="print" data-ar="مطبوعات" data-en="Print"><span><span data-l="ar">مطبوعات</span><span data-l="en">Print</span></span></label><label class="pill"><input type="radio" name="svc" value="motion" data-ar="موشن جرافيك" data-en="Motion graphics"><span><span data-l="ar">موشن جرافيك</span><span data-l="en">Motion graphics</span></span></label><label class="pill"><input type="radio" name="svc" value="content" data-ar="كتابة محتوى" data-en="Content writing"><span><span data-l="ar">كتابة محتوى</span><span data-l="en">Content writing</span></span></label><label class="pill"><input type="radio" name="svc" value="other" data-ar="خدمة أخرى" data-en="Something else"><span><span data-l="ar">خدمة أخرى</span><span data-l="en">Something else</span></span></label></div>
+          <div class="sel-wrap"><select id="fSvc" aria-label="ما الخدمة التي تحتاجها؟"><option value="" data-ar="اختر الخدمة…" data-en="Choose a service…">اختر الخدمة…</option><option value="identity" data-ar="هوية بصرية" data-en="Visual identity">هوية بصرية</option><option value="social" data-ar="تصاميم سوشيال ميديا" data-en="Social media">تصاميم سوشيال ميديا</option><option value="profile" data-ar="ملفات شركات وعروض تقديمية" data-en="Profiles &amp; decks">ملفات شركات وعروض تقديمية</option><option value="print" data-ar="مطبوعات" data-en="Print">مطبوعات</option><option value="motion" data-ar="موشن جرافيك" data-en="Motion graphics">موشن جرافيك</option><option value="content" data-ar="كتابة محتوى" data-en="Content writing">كتابة محتوى</option><option value="other" data-ar="خدمة أخرى" data-en="Something else">خدمة أخرى</option></select></div>
         </fieldset>
         <fieldset>
           <legend><span data-l="ar">الميزانية المتوقعة (اختياري)</span><span data-l="en">Expected budget (optional)</span></legend>
@@ -1603,11 +1611,21 @@ dialog.lb::backdrop{background:rgba(10,4,15,.9);backdrop-filter:blur(4px)}
   // service buttons preselect the form
   var form=document.getElementById('reqForm');
   document.querySelectorAll('.svc-cta').forEach(function(b){b.addEventListener('click',function(){
-    var r=form.querySelector('input[name="svc"][value="'+b.dataset.svc+'"]'); if(r) r.checked=true;
+    var fs=document.getElementById('fSvc'); if(fs){fs.value=b.dataset.svc; fs.classList.remove('empty');}
     if(location.hash!=='#contact'){location.hash='contact';} else {document.getElementById('contact').scrollIntoView();}
     setTimeout(function(){document.getElementById('fMsg').focus({preventScroll:true})},400);
   })});
 
+
+  // service dropdown: labels follow the page language
+  (function(){
+    var fs=document.getElementById('fSvc'); if(!fs) return;
+    function relabel(){ var l=root.lang==='en'?'en':'ar'; Array.prototype.forEach.call(fs.options,function(o){o.textContent=o.dataset[l]}); fs.setAttribute('aria-label',l==='en'?'What do you need?':'ما الخدمة التي تحتاجها؟'); }
+    function mark(){ fs.classList.toggle('empty',!fs.value) }
+    relabel(); mark();
+    new MutationObserver(relabel).observe(root,{attributes:true,attributeFilter:['lang']});
+    fs.addEventListener('change',mark);
+  })();
   // request form -> WhatsApp message
   var ok=document.getElementById('fOk'), err=document.getElementById('fErr'), sub=document.getElementById('fSubmit');
   // budget: amount field next to "I have a set budget"
@@ -1620,7 +1638,7 @@ dialog.lb::backdrop{background:rgba(10,4,15,.9);backdrop-filter:blur(4px)}
   }); });
   form.addEventListener('submit',function(e){
     e.preventDefault();
-    var l=root.lang, svc=form.querySelector('input[name="svc"]:checked'), bud=form.querySelector('input[name="budget"]:checked');
+    var l=root.lang, svc=(function(){var x=document.getElementById('fSvc');return x&&x.value?x.selectedOptions[0]:null})(), bud=form.querySelector('input[name="budget"]:checked');
     if(!svc){err.hidden=false; return;}
     err.hidden=true;
     var nm=document.getElementById('fName').value.trim(), msg=document.getElementById('fMsg').value.trim();

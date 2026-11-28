@@ -97,7 +97,8 @@
   /* ---------------- request form ---------------- */
   var form = document.getElementById('reqForm'), lastSig = '';
   if (form) form.addEventListener('submit', function () {
-    var svc = form.querySelector('input[name="svc"]:checked');
+    var fs = document.getElementById('fSvc');
+    var svc = fs && fs.value ? fs.selectedOptions[0] : null;
     if (!svc) return;
     var bud = form.querySelector('input[name="budget"]:checked');
     var v = function (id) { var el = document.getElementById(id); return el ? el.value.trim() : ''; };
