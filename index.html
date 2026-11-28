@@ -648,7 +648,7 @@ html[data-mode="light"] .hero::before{background:linear-gradient(0deg,var(--ink)
 html[lang="ar"] .hp-sub{direction:rtl;text-align:right}
 .hp-sub em{font-style:normal;color:var(--lilac)}
 html[data-mode="light"] .hp-sub em{color:var(--orchid,#964E9E)}
-.hp-title{position:relative;margin:0;direction:ltr;text-align:left;line-height:.86;padding-top:.55em}
+.hp-title{position:relative;margin:0;direction:ltr;text-align:left;line-height:.86;padding-top:.32em}
 .hp-word{display:inline-flex;align-items:baseline;font-weight:900;font-size:clamp(3.4rem,1rem + 7.2vw,7.6rem);letter-spacing:-.045em;color:var(--fg);white-space:nowrap}
 .hp-word .ch{display:inline-block;transform-origin:50% 90%;transition:transform .45s cubic-bezier(.3,1.6,.45,1),color .3s ease,text-shadow .3s ease;
   animation:hpIn .8s cubic-bezier(.2,.8,.25,1) both;animation-delay:calc(.25s + var(--k) * .05s)}
@@ -658,15 +658,15 @@ html[data-mode="light"] .hp-word .ch:hover{color:#A24FAB}
 .hp-dot{display:inline-block;width:.16em;height:.16em;border-radius:50%;background:var(--gold);margin-left:.06em;transform:translateY(-.02em);
   animation:hpIn .8s cubic-bezier(.2,.8,.25,1) .8s both,hpPulse 2.8s ease-in-out 1.8s infinite}
 .hp-word:hover .hp-dot{animation-play-state:running,paused;transform:translateY(-.02em) scale(1.25)}
-.hp-sign{position:absolute;left:.1em;top:-.05em;z-index:2;pointer-events:none;font-family:"RW Script",cursive;font-weight:400;
+.hp-sign{position:absolute;left:.05em;top:.32em;z-index:2;pointer-events:none;font-family:"RW Script",cursive;font-weight:400;
   font-size:clamp(2.6rem,1rem + 4.6vw,5.4rem);line-height:1;letter-spacing:.01em;color:#D88BE0;opacity:.95;
   transform:rotate(-6deg);transform-origin:left bottom;-webkit-text-stroke:.022em currentColor;
-  clip-path:inset(0 100% 0 0);animation:hpSign 1.6s cubic-bezier(.6,.1,.2,1) .55s forwards}
+  clip-path:inset(-60% 100% -60% -20%);animation:hpSign 1.6s cubic-bezier(.6,.1,.2,1) .55s forwards}
 html[data-mode="light"] .hp-sign{color:#A24FAB;opacity:.9}
 @keyframes hpIn{from{opacity:0;translate:0 .35em}to{opacity:1;translate:0 0}}
-@keyframes hpSign{to{clip-path:inset(0 -10% 0 0)}}
+@keyframes hpSign{to{clip-path:inset(-60% -20% -60% -20%)}}
 @keyframes hpPulse{50%{scale:1.18}}
-@media (max-width:900px){.hp-title{padding-top:.6em}}
+@media (max-width:900px){.hp-title{padding-top:.4em}}
 @media (prefers-reduced-motion:reduce){.hp-word .ch,.hp-dot,.hp-sign{animation:none;clip-path:none}}
 
 /* ---- Arabic wordmarks ---- */
